@@ -4,15 +4,10 @@ from qiskit import QuantumCircuit, QuantumRegister, AncillaRegister
 import numpy as np
 
 def cp_gate(qc,phi, control, target):
-    # Apply P(ϕ/2) to target
     qc.p(phi/2, target)
-    # Apply CNOT (control -> target)
     qc.cx(control, target)
-    # Apply P(-ϕ/2) to target
     qc.p(-phi/2, target)
-    # Apply CNOT again (control -> target)
     qc.cx(control, target)
-    # Apply P(ϕ/2) to control (critical for correct phase!)
     qc.p(phi/2, control)
 
 
@@ -37,17 +32,12 @@ def iqft(qc, qubits):
 
 
 def controlled_adder(qc, d, a, b, z, ancilla):
-    """Controlled adder (when z=0) based on Draper (2000)"""
-    # QFT on target register
+    #based on Draper (2000)
     qft(qc, b)
-
     qc.barrier()
-    
-    # Perform controlled addition
     for i in reversed(range(d)):
         for j in reversed(range(i+1)):
             angle = np.pi/(2**(i-j))
-            # Implement controlled phase operation (when z=0)
             qc.x(z)
             qc.ccx(z, a[j], ancilla)
             cp_gate(qc, angle, ancilla, b[i])
@@ -55,11 +45,11 @@ def controlled_adder(qc, d, a, b, z, ancilla):
             qc.ccx(z, a[j], ancilla)
             qc.x(z)
     qc.barrier()
-    # IQFT on target register
     iqft(qc, b)
 
 
 def controlled_multiplier(qc,d,x,y,z,result):
+    #based on 
     ancilla_1 = AncillaRegister(d, 'anc_1')
     ancilla_2 = AncillaRegister(1, 'anc_2')
     qc.add_register(ancilla_1)
@@ -103,7 +93,7 @@ def Qcalc(d):
     y = QuantumRegister(d, 'y')
     z = QuantumRegister(1, 'z')
     result = QuantumRegister(d, 'result')
-    ancilla = AncillaRegister(1, 'ancilla')  # Only need 1 ancilla
+    ancilla = AncillaRegister(1, 'ancilla')  
     
     qc = QuantumCircuit(result,z,y,x, ancilla)
 
@@ -113,15 +103,10 @@ def Qcalc(d):
     qc.barrier()
 
 
-    # Implement controlled operations based on z
-    controlled_adder(qc, d, x, result,z,ancilla[0])
-
+    controlled_adder(qc, d, x, result,z,ancilla)
 
     qc.barrier()
     
-
-    
-    # Implement controlled multiplication
     controlled_multiplier(qc,d,x,y,z,result)
     qc.barrier()
     
@@ -137,14 +122,17 @@ qc.draw(output="mpl", style="bw",fold=-1)
 
 
 # %%
+#gate count
 qc.count_ops()
 
 
 # %%
+#gate depth
 qc.depth()
 
 
 # %%
+#number of qubits
 qc.num_qubits
 
 
