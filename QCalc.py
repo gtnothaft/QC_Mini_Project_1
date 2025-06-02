@@ -83,10 +83,6 @@ def qcalc(d):
     
     # Create circuit
     qc = QuantumCircuit(result,z,y,x, ancilla)
-    qc.x(x[0])  # LSB
-    qc.x(x[1])  # Middle bit
-    qc.x(y[1])  # y = 2 (|010⟩)
-    qc.x(z)     # Enable multiplier (z=1)
     # Copy y to result (initial value for addition)
     for i in range(d):
         qc.cx(y[i], result[i])
@@ -94,15 +90,8 @@ def qcalc(d):
     # Implement controlled operations based on z
     controlled_adder(qc, d, x, result,z,ancilla)
 
-
-    #adder(qc,d,x,result)
     qc.barrier()
-    
-    # Reset the result register for multiplication
-    #for i in range(d):
-    #    qc.cx(y[i], result[i])  # Undo the initial copy
-    #qc.barrier()
-    
+    qc.x(z)
     # Implement controlled multiplication
     controlled_multiplier(qc, d, x,y, result, z,ancilla)
     #qc.barrier()
