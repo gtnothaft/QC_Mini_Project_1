@@ -1,4 +1,5 @@
 Mini-Project First Batch: #3 Quantum Calculator
+
 Gabriella Torres Nothaft
 
 QCalc.py includes the code that outputs the quantum circuit, the code that outputs gate count, depth, and number of ancillas used, and sample test codes for both addition and multiplication.
