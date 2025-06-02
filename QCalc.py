@@ -49,7 +49,7 @@ def controlled_adder(qc, d, a, b, z, ancilla):
 
 
 def controlled_multiplier(qc,d,x,y,z,result):
-    #based on 
+    #based on Ruiz-Perez= & Garcia-Escartin (2017)
     ancilla_1 = AncillaRegister(d, 'anc_1')
     ancilla_2 = AncillaRegister(1, 'anc_2')
     qc.add_register(ancilla_1)
@@ -88,7 +88,6 @@ def controlled_multiplier(qc,d,x,y,z,result):
 
 
 def Qcalc(d):
-    # Create registers
     x = QuantumRegister(d, 'x')
     y = QuantumRegister(d, 'y')
     z = QuantumRegister(1, 'z')
@@ -97,7 +96,6 @@ def Qcalc(d):
     
     qc = QuantumCircuit(result,z,y,x, ancilla)
 
-    # Copy y to result (initial value for addition)
     for i in range(d):
         qc.cx(y[i], result[i])
     qc.barrier()
