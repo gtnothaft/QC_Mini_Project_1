@@ -156,18 +156,15 @@ qc.num_qubits
 def test_multiplication(d=2):
 
     
-    # Create registers
     x = QuantumRegister(d, 'x')
     y = QuantumRegister(d, 'y')
-    z = QuantumRegister(1, 'z')  # z=1 for multiplication
+    z = QuantumRegister(1, 'z')  
     result = QuantumRegister(d, 'result')
-    ancilla_1 = AncillaRegister(d, 'anc_3')  # d ancillas for multiplier
-    ancilla_2 = AncillaRegister(1, 'anc_4')  # 1 ancilla for multiplier
+    ancilla_1 = AncillaRegister(d, 'anc_3')  
+    ancilla_2 = AncillaRegister(1, 'anc_4')  
     
-    # Create circuit (order matters!)
     qc = QuantumCircuit(result, z, y, x, ancilla_1, ancilla_2)
     
-    # Initialize inputs
     # x = 2 (10)
     qc.x(x[1])
     # y = 1 (01)
@@ -175,13 +172,11 @@ def test_multiplication(d=2):
     # z = 1 (multiplication mode)
     qc.x(z)
     
-    # Copy y to result (initial value)
     for i in range(d):
         qc.cx(y[i], result[i])
     
     qc.barrier()
     
-    # Perform multiplication
     controlled_multiplier(qc, d, x, y, z[0], result)
     
     return qc
@@ -199,18 +194,15 @@ sv.draw('latex')
 #testing addition
 def test_addition(d=2):
     
-    # Create registers
     x = QuantumRegister(d, 'x')
     y = QuantumRegister(d, 'y')
-    z = QuantumRegister(1, 'z')  # z=1 for multiplication
+    z = QuantumRegister(1, 'z')  
     result = QuantumRegister(d, 'result')
-    ancilla_1 = AncillaRegister(d, 'anc_3')  # d ancillas for multiplier
-    ancilla_2 = AncillaRegister(1, 'anc_4')  # 1 ancilla for multiplier
+    ancilla_1 = AncillaRegister(d, 'anc_3')  
+    ancilla_2 = AncillaRegister(1, 'anc_4')  
     
-    # Create circuit (order matters!)
     qc = QuantumCircuit(result, z, y, x, ancilla_1, ancilla_2)
     
-    # Initialize inputs
     # x = 2 (10)
     qc.x(x[1])
     # y = 1 (01)
@@ -218,13 +210,11 @@ def test_addition(d=2):
     # z = 0 (addition mode)
 
     
-    # Copy y to result (initial value)
     for i in range(d):
         qc.cx(y[i], result[i])
     
     qc.barrier()
     
-    # Perform multiplication
     controlled_adder(qc, d, x, result,z,ancilla_2)
     
     return qc
